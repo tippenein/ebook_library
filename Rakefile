@@ -8,3 +8,13 @@ RSpec::Core::RakeTask.new do |t|
 end
 
 task :default => 'spec'
+
+# example rake task
+task :generate do
+  require 'json'
+  default = EbookLibrary::Gatherer::DEFAULT_PATH
+  path = ARGV[1] || default if File.directory?(default)
+  gatherer = EbookLibrary::Gatherer.new path
+  ebooks = gatherer.gather.to_json
+  File.open("./books.json", 'w') { |file| file.write(ebooks) }
+end

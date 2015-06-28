@@ -6,20 +6,13 @@ require 'ebook_library/version'
 Gem::Specification.new do |spec|
   spec.name          = "ebook_library"
   spec.version       = EbookLibrary::VERSION
-  spec.authors       = ["brady.ouren"]
+  spec.authors       = ["tippenein"]
   spec.email         = ["brady.ouren@gmail.com"]
 
-  spec.summary       = "convert a single ebook location to an organized library"
-  spec.description   = "convert a single ebook location to an organized library"
-  spec.homepage      = "github.com/tippenein/ebook_library"
+  spec.summary       = "generate an organized library from a local ebook directory."
 
-  # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
-  # delete this section to allow pushing this gem to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
-  end
+  spec.description   = "generate an organized library from a local ebook directory."
+  spec.homepage      = "https://github.com/tippenein/ebook_library"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
@@ -29,4 +22,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
+
+  spec.add_dependency "mobi"
+  spec.add_dependency "epub-parser"
+  spec.add_dependency "pdf-reader"
+  spec.add_dependency "monadic"
 end
