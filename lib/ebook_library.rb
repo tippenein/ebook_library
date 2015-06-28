@@ -6,5 +6,10 @@ module EbookLibrary
     File.join ENV["HOME"], "Dropbox/ebooks"
   end
 
+  def self.generate(type=:json)
+    require 'json' if type.to_sym == :json
+    Gatherer.gather.to_json
+  end
+
   class InvalidPath < StandardError; end
 end
