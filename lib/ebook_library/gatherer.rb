@@ -3,6 +3,8 @@
 #
 # reference:
 #   http://wiki.mobileread.com/wiki/MOBI
+require 'epub/parser'
+require 'pdf-reader'
 
 module EbookLibrary
   class Gatherer
@@ -33,11 +35,11 @@ module EbookLibrary
       {books: results}
     end
 
-    private
-
     def encode_options
       {invalid: :replace, undef: :replace, replace: '?'}
     end
+
+    private
 
     def gather_metadatas
       Dir["#{path}/*"].inject([]) do |metadatas, book_path|
@@ -48,15 +50,14 @@ module EbookLibrary
     def metadata_for(book_path)
       case File.extname(book_path)
       when ".epub"
-        require 'epub/parser'
         # epub-parser
-        EPUB::Parser.parse(book_path).metadata
+        ::EPUB::Parser.parse(book_path).metadata
       when ".mobi"
         # mobi
-        Mobi.metadata File.open book_path
+        ::Mobi.metadata File.open book_path
       when ".pdf"
         # pdf-reader
-        PDF::Reader.new(book_path).metadata
+        ::PDF::Reader.new(book_path).metadata
       end
     end
   end
