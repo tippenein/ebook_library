@@ -1,5 +1,6 @@
 require 'bundler'
 require 'rspec/core/rake_task'
+require 'ebook_library'
 
 Bundler::GemHelper.install_tasks
 
@@ -12,9 +13,6 @@ task :default => 'spec'
 # example rake task
 task :generate do
   require 'json'
-  default = EbookLibrary::Gatherer::DEFAULT_PATH
-  path = ARGV[1] || default if File.directory?(default)
-  gatherer = EbookLibrary::Gatherer.new path
-  ebooks = gatherer.gather.to_json
+  ebooks = EbookLibrary.generate.to_json
   File.open("./books.json", 'w') { |file| file.write(ebooks) }
 end

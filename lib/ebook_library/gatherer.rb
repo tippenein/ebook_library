@@ -5,6 +5,9 @@
 #   http://wiki.mobileread.com/wiki/MOBI
 require 'epub/parser'
 require 'pdf-reader'
+require 'mobi'
+require 'monadic'
+require 'byebug'
 
 module EbookLibrary
   class Gatherer
@@ -23,10 +26,10 @@ module EbookLibrary
       results = gather_metadatas.inject([]) do |result, meta|
         begin
           result << {
-              author: meta.author.encode('UTF-8', encode_options),
-              title: meta.title.encode('UTF-8', encode_options),
-              format: 'mobi',
-              path: ""
+            author: Maybe(meta).author._("").encode('UTF-8', encode_options),
+            title: Maybe(meta).title._("untitled").encode('UTF-8', encode_options),
+            format: 'mobi',
+            path: ""
           }
         rescue
           next
@@ -42,23 +45,32 @@ module EbookLibrary
     private
 
     def gather_metadatas
-      Dir["#{path}/*"].inject([]) do |metadatas, book_path|
+      Dir.glob("#{path}/**/*").inject([]) do |metadatas, book_path|
         metadatas << metadata_for(book_path)
       end
     end
 
     def metadata_for(book_path)
-      case File.extname(book_path)
-      when ".epub"
-        # epub-parser
-        ::EPUB::Parser.parse(book_path).metadata
-      when ".mobi"
-        # mobi
-        ::Mobi.metadata File.open book_path
-      when ".pdf"
-        # pdf-reader
-        ::PDF::Reader.new(book_path).metadata
+      @book = File.open book_path
+      %i(parse_epub parse_mobi parse_pdf).inject(nil) do |parsed, parser|
+        begin
+          parsed || send(parser, @book)
+        rescue
+          nil
+        end
       end
+    end
+
+    def parse_epub
+      ::EPUB::Parser.parse(book_path).metadata
+    end
+
+    def parse_mobi
+      ::Mobi.metadata book
+    end
+
+    def parse_pdf
+      ::PDF::Reader.new(book).metadata
     end
   end
 end
