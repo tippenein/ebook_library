@@ -8,7 +8,7 @@ module EbookLibrary
     def initialize(ebook_path)
       @path = ebook_path
       @raw_ebook = File.open ebook_path
-      @adapter = EbookAdapter.new(metadata)
+      @adapter = get_adapter
     end
 
     def title
@@ -20,31 +20,39 @@ module EbookLibrary
     end
 
     def format
-      # get this from the raw ebook
+      @format ||= File.extname(path).gsub(/^./, "")
     end
 
     def to_hash
-      Hash[attrs.map{|sym| [sym, send(sym)]}]
-    end
-
-    def metadata
-      %i(parse_epub parse_mobi parse_pdf).inject(nil) do |parsed, parser|
-        begin
-          parsed || send(parser, book)
-        rescue
-          nil
-        end
-      end
+      Hash[attrs.map{|attr| [attr, send(attr)]}] if valid?
     end
 
     def has_metadata?
       !metadata.nil?
     end
 
+    def valid?
+      EbookFactory.supported_types.include?(format)
+    end
+
     private
+
+    def get_adapter
+      EbookFactory.new(format, metadata)
+    end
 
     def attrs
       [:title, :author, :format]
+    end
+
+    def metadata
+      %i(parse_mobi parse_epub parse_pdf).inject(nil) do |parsed, parser|
+        begin
+          parsed || send(parser)
+        rescue
+          nil
+        end
+      end
     end
 
     def parse_epub
@@ -52,7 +60,7 @@ module EbookLibrary
     end
 
     def parse_mobi
-      ::Mobi.metadata raw_book
+      ::Mobi.metadata raw_ebook
     end
 
     def parse_pdf

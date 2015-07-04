@@ -2,17 +2,12 @@ require 'spec_helper'
 
 describe EbookLibrary::Gatherer do
   subject { described_class.new }
-  let(:books) do
-    [{ :author => "derp",
-       :title => "town",
-       :format => "mobi"
-    }]
-  end
   let(:metadatas) { [] }
   let(:dir_exists?) { true }
+  let(:ebook_paths) { ['/path/to/ebook/'] }
 
   before do
-    allow(subject).to receive(:gather_metadatas).and_return metadatas
+    allow(subject).to receive(:gather_ebooks).and_return ebook_paths
     allow(File).to receive(:exist?).and_return dir_exists?
   end
 
@@ -37,7 +32,12 @@ describe EbookLibrary::Gatherer do
   end
 
   describe "#gather" do
-    it "gathers metadata from books"
-      # expect(subject.gather).to eq({:books => books })
+    let(:ebook) { double(to_hash: {title: 'blub'}) }
+    before do
+      allow(EbookLibrary::Ebook).to receive(:new).with(ebook_paths.first).and_return ebook
+    end
+    it "gathers books into a hash" do
+      expect(subject.gather).to eq ({books: [ebook.to_hash]})
+    end
   end
 end
