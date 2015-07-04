@@ -32,9 +32,6 @@ module EbookLibrary
         Factory::Mobi
       when 'pdf'
         Factory::Pdf
-      else
-        #TODO remove
-        Factory::Null
       end
     end
   end

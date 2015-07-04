@@ -5,11 +5,10 @@ require "ebook_library/ebook_factory"
 require "ebook_library/factory/epub"
 require "ebook_library/factory/mobi"
 require "ebook_library/factory/pdf"
-require "ebook_library/factory/null"
 
 module EbookLibrary
   def self.default_path
-    File.join ENV["HOME"], "Dropbox/ebooks"
+    File.join ENV["HOME"], "Documents/mobi_lib/Philosophy\ and\ Science"
   end
 
   def self.generate(type=:json)
