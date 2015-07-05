@@ -8,7 +8,7 @@ require "ebook_library/factory/pdf"
 
 module EbookLibrary
   def self.default_path
-    File.join ENV["HOME"], "Documents/mobi_lib/Philosophy\ and\ Science"
+    File.join ENV["HOME"], "Documents/ebooks"
   end
 
   #TODO allow different outputs

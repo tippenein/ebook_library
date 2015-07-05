@@ -11,7 +11,7 @@ end
 task :default => 'spec'
 
 # example rake task
-task :generate do
+task :generate => :environment do
   require 'json'
   ebooks = EbookLibrary.dump
   File.open("./books.json", 'w') { |file| file.write(ebooks) }
