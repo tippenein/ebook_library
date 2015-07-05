@@ -13,6 +13,6 @@ task :default => 'spec'
 # example rake task
 task :generate do
   require 'json'
-  ebooks = EbookLibrary.generate.to_json
+  ebooks = EbookLibrary.dump
   File.open("./books.json", 'w') { |file| file.write(ebooks) }
 end

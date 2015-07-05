@@ -42,7 +42,7 @@ module EbookLibrary
     end
 
     def attrs
-      [:title, :author, :format]
+      [:title, :author, :format, :path]
     end
 
     def metadata

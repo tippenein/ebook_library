@@ -11,7 +11,8 @@ module EbookLibrary
     File.join ENV["HOME"], "Documents/mobi_lib/Philosophy\ and\ Science"
   end
 
-  def self.generate(type=:json)
+  #TODO allow different outputs
+  def self.dump(type=:json)
     require 'json' if type.to_sym == :json
     Gatherer.new.gather.to_json
   end

@@ -15,7 +15,7 @@ module EbookLibrary
 
     def gather
       results = gather_ebooks.inject([]) do |result, book_path|
-        ebook = EbookLibrary::Ebook.new(book_path)
+        ebook = Ebook.new(book_path)
         result << ebook.to_hash
       end
       { books: results.compact }
