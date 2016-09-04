@@ -14,9 +14,13 @@ module EbookLibrary
     end
 
     def gather
-      results = gather_ebooks.inject([]) do |result, book_path|
-        ebook = Ebook.new(book_path)
-        result << ebook.to_hash
+      results = gather_ebooks.map do |book_path|
+        begin
+          ebook = Ebook.new(book_path)
+          ebook.to_hash
+        rescue EbookLibrary::UnsupportedFormatError
+          puts "skipping: " + book_path
+        end
       end
       { books: results.compact }
     end

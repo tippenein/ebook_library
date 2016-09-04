@@ -12,11 +12,11 @@ module EbookLibrary
     end
 
     def title
-      adapter.title
+      has_metadata? ? adapter.title : "unknown"
     end
 
     def author
-      adapter.author
+      has_metadata? ? adapter.author : "unknown"
     end
 
     def format

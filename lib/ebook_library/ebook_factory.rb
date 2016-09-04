@@ -3,6 +3,7 @@ module EbookLibrary
   class EbookFactory
     attr_reader :adapter
     def initialize(format, metadata)
+      raise UnsupportedFormatError unless %w(epub mobi pdf).include? format
       @adapter = for_type(format).new(metadata)
     end
 
